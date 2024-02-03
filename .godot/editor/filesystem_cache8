@@ -1,0 +1,15 @@
+ea4bc82a6ad023ab7ee23ee620429895
+::res://::1706989079
+::res://assets/::1706780978
+Beach-and-caves-tileset_by_AxulArt.png::CompressedTexture2D::7838854284243544917::1706425987::1706425988::1::::<><>::
+direction_tiles.png::CompressedTexture2D::8447080983025102801::1706432704::1706780908::1::::<><>::
+ice_tile.png::CompressedTexture2D::8866899807647002149::1706780978::1706780978::1::::<><>::
+icon.svg::CompressedTexture2D::308409187246854630::1706380931::1706421067::1::::<><>::
+spritesheet1.png::CompressedTexture2D::2055708869285606095::1706433490::1706433492::1::::<><>::
+tile_test.png::CompressedTexture2D::3212789812436230130::1706420919::1706421071::1::::<><>::
+::res://scenes/::1706896944
+character.tscn::PackedScene::3222690446364607869::1706896693::0::1::::<><>::uid://4j2hv17svqyx::::res://assets/spritesheet1.png<>res://scripts/character.gd
+map.tscn::PackedScene::5393067387841310460::1706896944::0::1::::<><>::uid://djxg1xhn4i6sf::::res://assets/Beach-and-caves-tileset_by_AxulArt.png<>uid://dsl3gpii0cjpp::::res://assets/direction_tiles.png<>uid://bl6digm27mmlx::::res://scenes/character.tscn<>uid://dylgsrjudl5sb::::res://assets/ice_tile.png
+TileMap.gd::GDScript::-1::1706509824::0::1::::<>TileMap<>::
+::res://scripts/::1706782465
+character.gd::GDScript::-1::1706782465::0::1::::<>Area2D<>::
