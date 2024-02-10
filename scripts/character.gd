@@ -14,7 +14,8 @@ var tile_type = {
 	"WALKABLE":0,
 	"COLLISION":1,
 	"DIRECTIONAL":2,
-	"ICE":3
+	"ICE":3,
+	"TELEPORT":4
 	}
 
 var direction_tile = {
@@ -29,6 +30,7 @@ func _ready():
 	position = Vector2(character_pos[0]*tile_size.x + tile_size.x/2,character_pos[1]*tile_size.y + tile_size.y/2)
 
 func _input(event):
+
 	if is_moving:
 		return
 	
@@ -37,6 +39,7 @@ func _input(event):
 	# and changes their animation
 	var position_delta = Vector2.ZERO
 	if event.is_action_pressed("move_right", true):
+		print("test")
 		position_delta = Vector2.RIGHT
 		$AnimatedSprite2D.animation = "side"
 		$AnimatedSprite2D.flip_h = false
@@ -52,7 +55,9 @@ func _input(event):
 		$AnimatedSprite2D.animation = "front"
 	else:
 		return
+	
 
+		
 	# The following code block casts a ray one tile in the direction of
 	# position delta
 	$RayCast2D.target_position = position_delta * tile_size / scale
@@ -79,16 +84,35 @@ func move(position_delta):
 	is_moving = false
 	$AnimatedSprite2D.stop()
 
+func teleport():
+	is_moving = true
+	
+	var link = {
+		Vector2(1,2):Vector2(5,-3),
+		Vector2(5,-3):Vector2(1,2),
+		Vector2(1,-2):Vector2(-2,-3),
+		Vector2(-2,-3):Vector2(1,-2)
+	}
+	
+	var tween = create_tween()
+	tween.tween_property(self,"modulate", Color(1,1,1,0.0), 0.7)
+	await tween.finished
+	
+	
+	character_pos = link[character_pos]
+	position = character_pos * tile_size + Vector2(tile_size.x/2,tile_size.y/2)
+	modulate = Color(1,1,1,1)
+	
+	is_moving = false
+
 func process_collision(position_delta, tilemap):
 	#If next tile is not a collision tile
 	if not is_instance_valid(tilemap):
-		print("walk")
 		await move(position_delta)
 		
 	#Colliding
 	else:
 		if is_instance_valid(tilemap.get_cell_tile_data(tilemap_layer["COLLISION"],character_pos + position_delta)):
-			print("Collision")
 			return
 		
 		#If next tile is a forced movement tile
@@ -129,6 +153,10 @@ func process_collision(position_delta, tilemap):
 					$AnimatedSprite2D.animation = "slide_front"
 				process_collision(position_delta, tilemap)
 				return
+				
+			elif tile_data.get_custom_data("tile_type") == tile_type["TELEPORT"]:
+				teleport()
+				
 			else:
 				print("This Should Not Happen")
 				
@@ -137,3 +165,8 @@ func process_collision(position_delta, tilemap):
 				return
 			await move(position_delta)
 		
+
+
+
+func _on_animated_sprite_2d_animation_finished():
+	pass
