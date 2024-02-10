@@ -73,7 +73,7 @@ func _input(event):
 func move(position_delta):
 	var tween = create_tween()
 	var target_pos = position + position_delta * tile_size
-	tween.tween_property(self,"position", target_pos, 0.4)
+	tween.tween_property(self,"position", target_pos, 0.5)
 	is_moving = true
 	$AnimatedSprite2D.play()
 	
