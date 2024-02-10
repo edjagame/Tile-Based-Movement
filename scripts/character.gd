@@ -29,7 +29,7 @@ var direction_tile = {
 func _ready():
 	position = Vector2(character_pos[0]*tile_size.x + tile_size.x/2,character_pos[1]*tile_size.y + tile_size.y/2)
 
-func _input(event):
+func _process(delta):
 
 	if is_moving:
 		return
@@ -38,19 +38,18 @@ func _input(event):
 	# faces position_delta towards a unit vector
 	# and changes their animation
 	var position_delta = Vector2.ZERO
-	if event.is_action_pressed("move_right", true):
-		print("test")
+	if Input.is_action_pressed("move_right", true):
 		position_delta = Vector2.RIGHT
 		$AnimatedSprite2D.animation = "side"
 		$AnimatedSprite2D.flip_h = false
-	elif event.is_action_pressed("move_left", true):
+	elif Input.is_action_pressed("move_left", true):
 		position_delta = Vector2.LEFT
 		$AnimatedSprite2D.animation = "side"
 		$AnimatedSprite2D.flip_h = true
-	elif event.is_action_pressed("move_up", true):
+	elif Input.is_action_pressed("move_up", true):
 		position_delta = Vector2.UP
 		$AnimatedSprite2D.animation = "back"
-	elif event.is_action_pressed("move_down", true):
+	elif Input.is_action_pressed("move_down", true):
 		position_delta = Vector2.DOWN
 		$AnimatedSprite2D.animation = "front"
 	else:
@@ -73,12 +72,11 @@ func _input(event):
 func move(position_delta):
 	var tween = create_tween()
 	var target_pos = position + position_delta * tile_size
-	tween.tween_property(self,"position", target_pos, 0.5)
+	tween.tween_property(self,"position", target_pos, 0.4)
 	is_moving = true
 	$AnimatedSprite2D.play()
 	
 	character_pos += position_delta
-	print(character_pos)
 	
 	await tween.finished
 	is_moving = false
