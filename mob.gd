@@ -5,7 +5,7 @@ var character_pos = Vector2(0,0)
 var is_moving = false	
 
 var tilemap_layer = {
-	"BASE":0,	
+	"BASE":0,
 	"COLLISION":1,
 	"SPECIAL":2
 	}
@@ -21,52 +21,15 @@ var tile_type = {
 var direction_tile = {
 	"RIGHT": 0,
 	"LEFT": 5,
-	"DOWN": 6,
+	"DOWN": 6,	
 	"UP": 7
 	}
 
 #Set initial position of character
 func _ready():
+	$Timer.start()
+	character_pos=Vector2(-1,-1)
 	position = Vector2(character_pos[0]*tile_size.x + tile_size.x/2,character_pos[1]*tile_size.y + tile_size.y/2)
-
-func _process(delta):
-
-	if is_moving:
-		return
-	
-	# The following code block gets the user input
-	# faces position_delta towards a unit vector
-	# and changes their animation
-	var position_delta = Vector2.ZERO
-	if Input.is_action_pressed("move_right", true):
-		position_delta = Vector2.RIGHT
-		$AnimatedSprite2D.animation = "side"
-		$AnimatedSprite2D.flip_h = false
-	elif Input.is_action_pressed("move_left", true):
-		position_delta = Vector2.LEFT
-		$AnimatedSprite2D.animation = "side"
-		$AnimatedSprite2D.flip_h = true
-	elif Input.is_action_pressed("move_up", true):
-		position_delta = Vector2.UP
-		$AnimatedSprite2D.animation = "back"
-	elif Input.is_action_pressed("move_down", true):
-		position_delta = Vector2.DOWN
-		$AnimatedSprite2D.animation = "front"
-	else:
-		return
-	
-
-		
-	# The following code block casts a ray one tile in the direction of
-	# position delta
-	$RayCast2D.target_position = position_delta * tile_size / scale
-	$RayCast2D.force_raycast_update()
-	
-	# Processes if there is a collision in the direction the user wants to go to and acts
-	# accordingly
-	process_collision(position_delta, $RayCast2D.get_collider())
-	
-	$RayCast2D.target_position = Vector2(0,0)
 	
 	
 func move(position_delta):
@@ -99,7 +62,6 @@ func teleport():
 	await tween.finished
 	
 	
-	
 	character_pos = link[character_pos]
 	position = character_pos * tile_size + Vector2(tile_size.x/2,tile_size.y/2)
 	modulate = Color(1,1,1,1)
@@ -110,6 +72,7 @@ func process_collision(position_delta, tilemap):
 	#If next tile is not a collision tile
 	if not is_instance_valid(tilemap):
 		await move(position_delta)
+	
 	elif tilemap.get_class() == "Area2D":
 		return
 	#Colliding
@@ -136,6 +99,7 @@ func process_collision(position_delta, tilemap):
 				elif tilemap.get_cell_alternative_tile(tilemap_layer["SPECIAL"],character_pos) == direction_tile["UP"]:
 					position_delta = Vector2.UP
 					
+			
 				
 				#process the collision of the next tile
 				$AnimatedSprite2D.animation = "spin"
@@ -166,3 +130,42 @@ func process_collision(position_delta, tilemap):
 				return
 			await move(position_delta)
 		
+
+
+func _on_timer_timeout():
+	
+	if is_moving:
+		return
+	
+	var rng = RandomNumberGenerator.new()
+	
+	var mob_direction = rng.randi_range(0, 3)
+	var position_delta = Vector2.ZERO
+	if mob_direction==0:
+		position_delta = Vector2.RIGHT
+		$AnimatedSprite2D.animation = "side"
+		$AnimatedSprite2D.flip_h = false
+	elif mob_direction==1:
+		position_delta = Vector2.LEFT
+		$AnimatedSprite2D.animation = "side"
+		$AnimatedSprite2D.flip_h = true
+	elif mob_direction==2:
+		position_delta = Vector2.UP
+		$AnimatedSprite2D.animation = "back"
+	elif mob_direction==3:
+		position_delta = Vector2.DOWN
+		$AnimatedSprite2D.animation = "front"
+	else:
+		return
+	
+		
+	# The following code block casts a ray one tile in the direction of
+	# position delta
+	$RayCast2D.target_position = position_delta * tile_size / scale
+	$RayCast2D.force_raycast_update()
+			
+	# Processes if there is a collision in the direction the user wants to go to and acts
+	# accordingly
+	process_collision(position_delta, $RayCast2D.get_collider())
+	
+	$RayCast2D.target_position = Vector2(0,0)

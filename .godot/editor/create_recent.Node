@@ -1,7 +1,8 @@
-TileMap
+Timer
 RayCast2D
 CollisionShape2D
-Camera2D
-RemoteTransform2D
 AnimatedSprite2D
 Area2D
+TileMap
+Camera2D
+RemoteTransform2D

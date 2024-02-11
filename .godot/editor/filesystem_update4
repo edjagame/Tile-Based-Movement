@@ -1,3 +1,5 @@
-res://scenes/map.tscn
-res://scripts/character.gd
 res://scenes/character.tscn
+res://scripts/character.gd
+res://scenes/map.tscn
+res://mob.tscn
+res://mob.gd
